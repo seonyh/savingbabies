@@ -45,7 +45,7 @@ class image_montage(object):
         gray_image = I[:,:,1]
         gray_image = cv2.equalizeHist(gray_image)
         
-        #Detect Harris features. May need to adjust parameters.
+        #Detect SURF features
         surf = cv2.SURF();
         #harrisDetector = cv2.FeatureDetector_create('HARRIS')
         freakExtractor = cv2.DescriptorExtractor_create('FREAK')
@@ -55,16 +55,26 @@ class image_montage(object):
         #Match descriptors
         bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
         matches = bf.match(descriptors,descriptors_previous)
-        #These two lines are probably definitely wrong:
-        #matchedPoints = matches[2:3, :];
-        #matchedPointsPrev = matches[0:1, :];
+        matches = sorted(matches, key = lambda x:x.distance)
+        matchedPointsPrev = []
+        matchedPoints = []
         
-        #tforms[n] = getPerspectiveTransform(matchedPoints, matchedPointsPrev)
+        #Based on page 184: https://media.readthedocs.org/pdf/opencv-python-tutroals/latest/opencv-python-tutroals.pdf
+        matchedPointsPrev.append(points_previous[matches[i in range(len(matches))].trainIdx])
+        matchedPoints.append(points[matches[i in range(len(matches))].queryIdx])
+        matchedPointsPrev = np.asarray(matchedPointsPrev)
+        matchedPoints = np.asarray(matchedPoints)
+        
+        print type(matchedPoints)
+        
+        # Apply ratio test to determine good points
+        #good_matches = []
+        #for i in range(len(matches)):
+        #    if m.distance < 0.75*n.distance:
+        #        good_matches.append([m])
+        
+        tforms[index] = cv2.getPerspectiveTransform(matchedPointsPrev, matchedPoints)
         #tforms[n] = tforms[n-1] * tforms[n]
     print 6
-   
- #  for index in range(len(tforms)):
-  #     [xlim[i,:], ylim[i,:]] = outputLimits(tforms(i), [1 imageSize(2)], [1 imageSize(1)]) 
 
-    
         
