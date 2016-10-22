@@ -26,7 +26,7 @@
 % |<matlab:doc('cameraCalibrator'); cameraCalibrator>| App to calibrate a camera if needed.
 
 % Load images.
-buildingDir = fullfile('.\');
+buildingDir = fullfile('./test_images');
 buildingScene = imageSet(buildingDir);
 
 % Display images to be stitched
@@ -44,7 +44,7 @@ montage(buildingScene.ImageLocation)
 I = read(buildingScene, 1);
 
 % Initialize features for I(1)
-grayImage = I(:,:,2);
+grayImage = histeq(I(:,:,2));
 points = detectHarrisFeatures(grayImage);
 [features, points] = extractFeatures(grayImage, points);
 
@@ -64,11 +64,11 @@ for n = 2:buildingScene.Count
     % Read I(n).
     I = read(buildingScene, n);
     
-    % Detect and extract SURF features for I(n).
-    grayImage = I(:,:,2);    
+    % Detect and extract Harris features for I(n).
+    grayImage = histeq(I(:,:,2)); 
     points = detectHarrisFeatures(grayImage);    
     [features, points] = extractFeatures(grayImage, points);
-    
+
     % Find correspondences between I(n) and I(n-1).
     indexPairs = matchFeatures(features, featuresPrevious, 'Unique', true);
        
