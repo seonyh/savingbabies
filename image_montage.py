@@ -24,11 +24,12 @@ class image_montage(object):
     #Initialize features for first image
     gray_image = I[:,:,1]
     gray_image = cv2.equalizeHist(gray_image);
+    
     #Detect Harris features. May need to adjust parameters.
-    points = cv2.goodFeaturesToTrack(gray_image,max_corners,quality,min_distance,useHarrisDetector = 1)
-        #keypoints = cv2.cornerHarris(gray_image,2,3,0.04) 
+    harrisDetector = cv2.FeatureDetector_create("HARRIS")
+    freakDescriptorExtractor = cv2.DescriptorExtractor_create("FREAK")
+    keypoints = harrisDetector.detect(gray_image)
+    (keypoints, descriptors) = freakDescriptorExtractor.compute(gray_image,keypoints)
     
-    #Convert points to cv::KeyPoint
     
-    freakExtractor = cv2.DescriptorExtractor_create('FREAK')
-    points,descriptors = freakExtractor.compute(gray_image,points)
+    
