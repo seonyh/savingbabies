@@ -32,7 +32,7 @@ class image_montage(object):
     (keypoints, descriptors) = freakDescriptorExtractor.compute(gray_image,keypoints)
     
     #Initialize transforms to identity matrix
-    tforms = [cv2.warpPerspective(np.identity(3)) for i in range(len(image_list))]
+    tforms = [cv2.getPerspectiveTransform(np.identity(3)) for i in range(len(image_list))]
 
     #Iterate over remaining image pairs
     for index in range(1,len(image_list)):
@@ -48,5 +48,17 @@ class image_montage(object):
         keypoints = harrisDetector.detect(gray_image)
         (keypoints, descriptors) = freakDescriptorExtractor.compute(gray_image,keypoints)
         
-    
-    
+        #Match descriptors
+        bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
+        matches = bf.match(des1,des2)
+        matchedPoints = matches[2:3, :];
+        matchedPointsPrevious = matches[0:1, :];
+        print 3
+        
+        # Apply ratio test
+        #good = []
+        #for m,n in matches:
+        #    if m.distance < 0.75*n.distance:
+        #        good.append([m])
+
+        
