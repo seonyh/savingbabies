@@ -26,7 +26,7 @@
 % |<matlab:doc('cameraCalibrator'); cameraCalibrator>| App to calibrate a camera if needed.
 
 % Load images.
-buildingDir = fullfile('./eye_test');
+buildingDir = fullfile('./rop_test_images');
 buildingScene = imageSet(buildingDir);
 
 % Display images to be stitched
@@ -74,7 +74,7 @@ for n = 2:buildingScene.Count
     [features, points] = extractFeatures(grayImage, points);
 
     % Find correspondences between I(n) and I(n-1).
-    indexPairs = matchFeatures(features, featuresPrevious, 'MatchThreshold', 0.001, 'Unique', true);
+    indexPairs = matchFeatures(features, featuresPrevious,'Unique', true);
        
     matchedPoints = points(indexPairs(:,1), :);
     matchedPointsPrev = pointsPrevious(indexPairs(:,2), :);        
