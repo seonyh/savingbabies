@@ -67,14 +67,12 @@ for n = 2:buildingScene.Count
     I = read(buildingScene, n);
     
     % Detect and extract Harris features for I(n).
-    grayImage = histeq(I(:,:,2));
-    figure;
-    imshow(grayImage)
+    grayImage = histeq(I(:,:,2)); 
     points = detectHarrisFeatures(grayImage);    
     [features, points] = extractFeatures(grayImage, points);
 
     % Find correspondences between I(n) and I(n-1).
-    indexPairs = matchFeatures(features, featuresPrevious, 'MatchThreshold', 0.001, 'Unique', true);
+    indexPairs = matchFeatures(features, featuresPrevious, 'Unique', true);
        
     matchedPoints = points(indexPairs(:,1), :);
     matchedPointsPrev = pointsPrevious(indexPairs(:,2), :);        
